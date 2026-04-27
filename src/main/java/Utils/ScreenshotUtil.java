@@ -8,23 +8,23 @@ import org.apache.commons.io.FileUtils;
 
 public class ScreenshotUtil {
 
-	public static void capture(WebDriver driver, String testName)
-	{
-		TakesScreenshot ts = (TakesScreenshot) driver;
-		
-		File src = ts.getScreenshotAs(OutputType.FILE);
-		
-		String path = System.getProperty("user.dir") 
-				+ "/screenshots/" 
-				+ testName + ".png";
-		
-		try {
-			FileUtils.copyFile(src, new File(path));
-			System.out.println("Screenshot saved: " + path);
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
-	
+	public static void capture(WebDriver driver, String testName) {
+	    try {
+	        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+	        String fileName = testName + "_" + System.currentTimeMillis() + ".png";
+
+	        File dest = new File(System.getProperty("user.dir") + "/screenshots/" + fileName);
+
+	        // Create folder if not exists (VERY IMPORTANT for Jenkins)
+	        dest.getParentFile().mkdirs();
+
+	        FileUtils.copyFile(src, dest);
+
+	        System.out.println("Screenshot saved at: " + dest.getAbsolutePath());
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 }
